@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-import blogService from './services/blogs.js';
-import loginService from './services/login.js';
+import blogService from './services/blogService.js';
+import loginService from './services/loginService.js';
 
 import Blog from './components/Blog.js';
 import Notification from './components/Notification.js';
@@ -26,6 +26,7 @@ const App = () => {
 
       localStorage.setItem('loggedBloglistUser', JSON.stringify(user));
 
+      blogService.setToken(user.token);
       setUser(user);
       setUsername('');
       setPassword('');
@@ -42,7 +43,7 @@ const App = () => {
     setUser(null);
   };
 
-  const loginForm = () => {
+  const LoginForm = () => {
     return (
       <>
         <h2>Log in to application</h2>
@@ -71,7 +72,45 @@ const App = () => {
     );
   };
 
-  const blogsForm = () => {
+  const BlogForm = () => {
+    const [newTitle, setNewTitle] = useState('');
+    const [newAuthor, setNewAuthor] = useState('');
+    const [newUrl, setNewUrl] = useState('');
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+
+      const newBlog = { title: newTitle, author: newAuthor, url: newUrl };
+
+      blogService
+        .create(newBlog)
+        .then((blog) => {
+          setBlogs([...blogs, blog]);
+          setMessage({ text: 'Added', type: 'success' });
+          setTimeout(() => {
+            setMessage({});
+          }, 3000);
+        })
+        .catch((err) => {
+          setMessage({ text: err.message, type: 'error' });
+          setTimeout(() => {
+            setMessage({});
+          }, 3000);
+        });
+    };
+
+    const handleNewTitle = ({ target: { value } }) => {
+      setNewTitle(value);
+    };
+
+    const handleNewAuthor = ({ target: { value } }) => {
+      setNewAuthor(value);
+    };
+
+    const handleNewUrl = ({ target: { value } }) => {
+      setNewUrl(value);
+    };
+
     return (
       <>
         <h2>Blogs</h2>
@@ -80,6 +119,23 @@ const App = () => {
           <button onClick={handleLogout}>logout</button>
         </p>
 
+        <h3>Create new</h3>
+        <form onSubmit={handleSubmit}>
+          <div>
+            title: <input onChange={handleNewTitle} value={newTitle} />
+          </div>
+          <div>
+            author: <input onChange={handleNewAuthor} value={newAuthor} />
+          </div>
+          <div>
+            url: <input onChange={handleNewUrl} value={newUrl} />
+          </div>
+          <div>
+            <button type="submit">create</button>
+          </div>
+        </form>
+
+        <h3>Blog list</h3>
         {blogs.map((b) => (
           <Blog key={b.id} blog={b} />
         ))}
@@ -96,13 +152,14 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
+      blogService.setToken(user.token);
     }
   }, []);
 
   return (
     <div>
       <Notification message={message} />
-      {user ? blogsForm() : loginForm()}
+      {user ? <BlogForm /> : <LoginForm />}
     </div>
   );
 };
