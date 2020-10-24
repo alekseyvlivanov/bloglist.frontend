@@ -1,21 +1,88 @@
 import React, { useState, useEffect } from 'react';
 
-import Blog from './components/Blog';
-import blogService from './services/blogs';
+import blogService from './services/blogs.js';
+import loginService from './services/login.js';
+
+import Blog from './components/Blog.js';
+import Notification from './components/Notification.js';
+
+import './App.css';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
+  const [message, setMessage] = useState({});
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [user, setUser] = useState(null);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const user = await loginService.login({
+        username,
+        password,
+      });
+      setUser(user);
+      setUsername('');
+      setPassword('');
+    } catch (err) {
+      setMessage({ text: 'Wrong credentials', type: 'error' });
+      setTimeout(() => {
+        setMessage({});
+      }, 3000);
+    }
+  };
+
+  const loginForm = () => {
+    return (
+      <>
+        <h2>Log in to application</h2>
+        <form onSubmit={handleLogin}>
+          <div>
+            username
+            <input
+              type="text"
+              value={username}
+              name="Username"
+              onChange={({ target }) => setUsername(target.value)}
+            />
+          </div>
+          <div>
+            password
+            <input
+              type="password"
+              value={password}
+              name="Password"
+              onChange={({ target }) => setPassword(target.value)}
+            />
+          </div>
+          <button type="submit">login</button>
+        </form>
+      </>
+    );
+  };
+
+  const blogsForm = () => {
+    return (
+      <>
+        <h2>Blogs</h2>
+        <p>{user.name} logged in</p>
+        {blogs.map((b) => (
+          <Blog key={b.id} blog={b} />
+        ))}
+      </>
+    );
+  };
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService.getAll().then((fetchedBlogs) => setBlogs(fetchedBlogs));
   }, []);
 
   return (
     <div>
-      <h2>blogs</h2>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      <Notification message={message} />
+      {user ? blogsForm() : loginForm()}
     </div>
   );
 };
