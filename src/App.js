@@ -23,6 +23,9 @@ const App = () => {
         username,
         password,
       });
+
+      localStorage.setItem('loggedBloglistUser', JSON.stringify(user));
+
       setUser(user);
       setUsername('');
       setPassword('');
@@ -32,6 +35,11 @@ const App = () => {
         setMessage({});
       }, 3000);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('loggedBloglistUser');
+    setUser(null);
   };
 
   const loginForm = () => {
@@ -67,7 +75,11 @@ const App = () => {
     return (
       <>
         <h2>Blogs</h2>
-        <p>{user.name} logged in</p>
+        <p>
+          {user.name} logged in
+          <button onClick={handleLogout}>logout</button>
+        </p>
+
         {blogs.map((b) => (
           <Blog key={b.id} blog={b} />
         ))}
@@ -77,6 +89,14 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then((fetchedBlogs) => setBlogs(fetchedBlogs));
+  }, []);
+
+  useEffect(() => {
+    const loggedUserJSON = localStorage.getItem('loggedBloglistUser');
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+    }
   }, []);
 
   return (
