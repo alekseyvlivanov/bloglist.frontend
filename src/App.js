@@ -86,7 +86,10 @@ const App = () => {
         .create(newBlog)
         .then((blog) => {
           setBlogs([...blogs, blog]);
-          setMessage({ text: 'Added', type: 'success' });
+          setMessage({
+            text: `A new blog "${newTitle}" by ${newAuthor} added`,
+            type: 'success',
+          });
           setTimeout(() => {
             setMessage({});
           }, 3000);
