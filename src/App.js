@@ -67,19 +67,18 @@ const App = () => {
     }
   };
 
-  const updateBlog = async ({ id, title, author, url, likes, user }) => {
-    const updatedBlog = { title, author, url, likes, user };
+  const updateBlog = async (updatedBlog) => {
     try {
-      const blog = await blogService.updateBlog(id, updatedBlog);
-      const idx = blogs.findIndex((b) => b.id === blog.id);
+      await blogService.updateBlog(updatedBlog);
+      const idx = blogs.findIndex((b) => b.id === updatedBlog.id);
       const updatedBlogs = [
         ...blogs.slice(0, idx),
-        blog,
+        updatedBlog,
         ...blogs.slice(idx + 1),
       ];
       setBlogs(updatedBlogs.sort((a, b) => b.likes - a.likes));
       setMessage({
-        text: `"${blog.title}" by ${blog.author} updated`,
+        text: `"${updatedBlog.title}" by ${updatedBlog.author} updated`,
         type: 'success',
       });
       setTimeout(() => {

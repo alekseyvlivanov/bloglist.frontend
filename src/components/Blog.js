@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const Blog = ({ blog, updateBlog, deleteBlog, canDelete }) => {
   const {
@@ -32,7 +33,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, canDelete }) => {
   return (
     <div style={blogStyle}>
       <div>
-        "{title}" by {author}{' '}
+        &quot;{title}&quot; by {author}{' '}
         <button onClick={() => setFullView(!fullView)}>
           {fullView ? 'hide' : 'view'}
         </button>
@@ -49,6 +50,13 @@ const Blog = ({ blog, updateBlog, deleteBlog, canDelete }) => {
       )}
     </div>
   );
+};
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  updateBlog: PropTypes.func.isRequired,
+  deleteBlog: PropTypes.func.isRequired,
+  canDelete: PropTypes.bool.isRequired,
 };
 
 export default Blog;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Notification = ({ message: { text, type } }) => {
   if (!text || !type) {
@@ -6,6 +7,13 @@ const Notification = ({ message: { text, type } }) => {
   }
 
   return <div className={type}>{text}</div>;
+};
+
+Notification.propTypes = {
+  message: PropTypes.exact({
+    text: PropTypes.string,
+    type: PropTypes.oneOf(['success', 'error']),
+  }),
 };
 
 export default Notification;
