@@ -51,7 +51,7 @@ const App = () => {
     try {
       const blog = await blogService.create(newBlog);
       blogFormRef.current.toggleVisibility();
-      setBlogs([...blogs, blog]);
+      setBlogs([...blogs, blog].sort((a, b) => b.likes - a.likes));
       setMessage({
         text: `A new blog "${newBlog.title}" by ${newBlog.author} created`,
         type: 'success',
@@ -77,7 +77,7 @@ const App = () => {
         blog,
         ...blogs.slice(idx + 1),
       ];
-      setBlogs(updatedBlogs);
+      setBlogs(updatedBlogs.sort((a, b) => b.likes - a.likes));
       setMessage({
         text: `"${blog.title}" by ${blog.author} updated`,
         type: 'success',
@@ -117,7 +117,7 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedBlogs = await blogService.getAll();
-      setBlogs(fetchedBlogs);
+      setBlogs(fetchedBlogs.sort((a, b) => b.likes - a.likes));
     };
     fetchData();
   }, []);
