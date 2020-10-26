@@ -49,7 +49,7 @@ const App = () => {
 
   const createNewBlog = async (newBlog) => {
     try {
-      const blog = await blogService.create(newBlog);
+      const blog = await blogService.createBlog(newBlog);
       blogFormRef.current.toggleVisibility();
       setBlogs([...blogs, blog].sort((a, b) => b.likes - a.likes));
       setMessage({
@@ -70,7 +70,7 @@ const App = () => {
   const updateBlog = async ({ id, title, author, url, likes, user }) => {
     const updatedBlog = { title, author, url, likes, user };
     try {
-      const blog = await blogService.update(id, updatedBlog);
+      const blog = await blogService.updateBlog(id, updatedBlog);
       const idx = blogs.findIndex((b) => b.id === blog.id);
       const updatedBlogs = [
         ...blogs.slice(0, idx),
@@ -85,6 +85,22 @@ const App = () => {
       setTimeout(() => {
         setMessage({});
       }, 3000);
+    } catch (err) {
+      setMessage({ text: err.message, type: 'error' });
+      setTimeout(() => {
+        setMessage({});
+      }, 3000);
+    }
+  };
+
+  const deleteBlog = async ({ id, title, author }) => {
+    try {
+      await blogService.deleteBlog(id);
+      setBlogs(blogs.filter((b) => b.id !== id));
+      setMessage({
+        text: `"${title}" by ${author} deleted`,
+        type: 'success',
+      });
     } catch (err) {
       setMessage({ text: err.message, type: 'error' });
       setTimeout(() => {
@@ -108,7 +124,13 @@ const App = () => {
 
         <h3>Blog list</h3>
         {blogs.map((b) => (
-          <Blog key={b.id} blog={b} updateBlog={updateBlog} />
+          <Blog
+            key={b.id}
+            blog={b}
+            updateBlog={updateBlog}
+            deleteBlog={deleteBlog}
+            canDelete={b.user.username === user.username}
+          />
         ))}
       </>
     );

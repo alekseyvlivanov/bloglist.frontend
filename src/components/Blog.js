@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog, canDelete }) => {
   const {
     title,
     author,
@@ -18,9 +18,15 @@ const Blog = ({ blog, updateBlog }) => {
     marginBottom: 5,
   };
 
-  const handleLike = async () => {
+  const handleLike = () => {
     const updatedBlog = { ...blog, likes: likes + 1 };
-    await updateBlog(updatedBlog);
+    updateBlog(updatedBlog);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm(`Delete blog "${title}" by ${author}?`)) {
+      deleteBlog(blog);
+    }
   };
 
   return (
@@ -38,6 +44,7 @@ const Blog = ({ blog, updateBlog }) => {
             likes {likes} <button onClick={handleLike}>like</button>
           </div>
           <div>{name}</div>
+          {canDelete && <button onClick={handleDelete}>delete</button>}
         </>
       )}
     </div>
