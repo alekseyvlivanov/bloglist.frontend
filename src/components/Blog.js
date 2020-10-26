@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 
-const Blog = ({
-  blog: {
+const Blog = ({ blog, updateBlog }) => {
+  const {
     title,
     author,
     url,
     likes,
     user: { name },
-  },
-}) => {
+  } = blog;
+
   const [fullView, setFullView] = useState(false);
 
   const blogStyle = {
@@ -16,6 +16,11 @@ const Blog = ({
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
+  };
+
+  const handleLike = async () => {
+    const updatedBlog = { ...blog, likes: likes + 1 };
+    await updateBlog(updatedBlog);
   };
 
   return (
@@ -30,7 +35,7 @@ const Blog = ({
         <>
           <div>{url}</div>
           <div>
-            likes {likes} <button>like</button>
+            likes {likes} <button onClick={handleLike}>like</button>
           </div>
           <div>{name}</div>
         </>

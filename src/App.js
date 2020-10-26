@@ -67,6 +67,32 @@ const App = () => {
     }
   };
 
+  const updateBlog = async ({ id, title, author, url, likes, user }) => {
+    const updatedBlog = { title, author, url, likes, user };
+    try {
+      const blog = await blogService.update(id, updatedBlog);
+      const idx = blogs.findIndex((b) => b.id === blog.id);
+      const updatedBlogs = [
+        ...blogs.slice(0, idx),
+        blog,
+        ...blogs.slice(idx + 1),
+      ];
+      setBlogs(updatedBlogs);
+      setMessage({
+        text: `"${blog.title}" by ${blog.author} updated`,
+        type: 'success',
+      });
+      setTimeout(() => {
+        setMessage({});
+      }, 3000);
+    } catch (err) {
+      setMessage({ text: err.message, type: 'error' });
+      setTimeout(() => {
+        setMessage({});
+      }, 3000);
+    }
+  };
+
   const blogForm = () => {
     return (
       <>
@@ -82,7 +108,7 @@ const App = () => {
 
         <h3>Blog list</h3>
         {blogs.map((b) => (
-          <Blog key={b.id} blog={b} />
+          <Blog key={b.id} blog={b} updateBlog={updateBlog} />
         ))}
       </>
     );
