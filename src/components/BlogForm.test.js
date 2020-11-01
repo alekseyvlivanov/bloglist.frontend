@@ -25,4 +25,6 @@ test('<BlogForm /> updates parent state and calls onSubmit', () => {
   expect(createNewBlog.mock.calls[0][0].title).toBe(
     'testing of forms could be easier',
   );
+  expect(createNewBlog.mock.calls[0][0].author).toBe('test user');
+  expect(createNewBlog.mock.calls[0][0].url).toBe('http://localhost:3000');
 });
