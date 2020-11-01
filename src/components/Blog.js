@@ -31,7 +31,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, canDelete }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div className="blog" style={blogStyle}>
       <div>
         &quot;{title}&quot; by {author}{' '}
         <button onClick={() => setFullView(!fullView)}>
