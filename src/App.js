@@ -108,9 +108,9 @@ const App = () => {
     }
   };
 
-  const likeBlog = (blog) => {
+  const likeBlog = async (blog) => {
     const updatedBlog = { ...blog, likes: blog.likes + 1 };
-    updateBlog(updatedBlog);
+    await updateBlog(updatedBlog);
   };
 
   const blogForm = () => {

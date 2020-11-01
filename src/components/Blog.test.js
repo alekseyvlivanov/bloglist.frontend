@@ -1,5 +1,4 @@
 import React from 'react';
-import { prettyDOM } from '@testing-library/dom';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render } from '@testing-library/react';
 
@@ -48,5 +47,9 @@ test('render contents', () => {
   expect(div).toHaveTextContent(blog.url);
   expect(div).toHaveTextContent(blog.likes);
 
-  //   expect(mockHandler.mock.calls).toHaveLength(1);
+  const btnLike = component.getByText('like');
+  fireEvent.click(btnLike);
+  fireEvent.click(btnLike);
+
+  expect(mockLikeHandler.mock.calls).toHaveLength(2);
 });
