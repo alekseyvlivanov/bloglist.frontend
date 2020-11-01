@@ -14,11 +14,14 @@ test('render contents', () => {
     user: { name: 'root' },
   };
 
+  const mockDeleteHandler = jest.fn();
+  const mockLikeHandler = jest.fn();
+
   const component = render(
     <Blog
       blog={blog}
-      updateBlog={() => {}}
-      deleteBlog={() => {}}
+      deleteBlog={mockDeleteHandler}
+      likeBlog={mockLikeHandler}
       canDelete={true}
     />,
   );
@@ -38,31 +41,12 @@ test('render contents', () => {
   expect(div).toHaveTextContent(blog.author);
   expect(div).not.toHaveTextContent(blog.url);
   expect(div).not.toHaveTextContent(blog.likes);
+
+  const btnView = component.getByText('view');
+  fireEvent.click(btnView);
+
+  expect(div).toHaveTextContent(blog.url);
+  expect(div).toHaveTextContent(blog.likes);
+
+  //   expect(mockHandler.mock.calls).toHaveLength(1);
 });
-
-// test('clicking the button calls event handler once', () => {
-//   const mockHandler = jest.fn();
-
-//   const blog = {
-//     title: 'Component testing is done with react-testing-library',
-//     author: 'test user',
-//     url: 'http://localhost:3000',
-//     likes: 1,
-//     user: { name: 'root' },
-//   };
-
-//   const component = render(
-//     <Blog
-//       blog={blog}
-//       updateBlog={() => {}}
-//       deleteBlog={() => {}}
-//       canDelete={true}
-//     />,
-//   );
-
-//   const btn = component.getByText('view');
-//   console.log(prettyDOM(btn));
-//   fireEvent.click(btn);
-
-//   expect(mockHandler.mock.calls).toHaveLength(1);
-// });

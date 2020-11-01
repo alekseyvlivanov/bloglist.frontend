@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const Blog = ({ blog, updateBlog, deleteBlog, canDelete }) => {
+const Blog = ({ blog, deleteBlog, likeBlog, canDelete }) => {
   const {
     title,
     author,
@@ -17,11 +17,6 @@ const Blog = ({ blog, updateBlog, deleteBlog, canDelete }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  };
-
-  const handleLike = () => {
-    const updatedBlog = { ...blog, likes: likes + 1 };
-    updateBlog(updatedBlog);
   };
 
   const handleDelete = () => {
@@ -42,7 +37,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, canDelete }) => {
         <>
           <div>{url}</div>
           <div>
-            likes {likes} <button onClick={handleLike}>like</button>
+            likes {likes} <button onClick={() => likeBlog(blog)}>like</button>
           </div>
           <div>{name}</div>
           {canDelete && <button onClick={handleDelete}>delete</button>}
@@ -54,8 +49,8 @@ const Blog = ({ blog, updateBlog, deleteBlog, canDelete }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  updateBlog: PropTypes.func.isRequired,
   deleteBlog: PropTypes.func.isRequired,
+  likeBlog: PropTypes.func.isRequired,
   canDelete: PropTypes.bool.isRequired,
 };
 

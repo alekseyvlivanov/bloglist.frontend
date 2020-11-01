@@ -108,6 +108,11 @@ const App = () => {
     }
   };
 
+  const likeBlog = (blog) => {
+    const updatedBlog = { ...blog, likes: blog.likes + 1 };
+    updateBlog(updatedBlog);
+  };
+
   const blogForm = () => {
     return (
       <>
@@ -126,8 +131,8 @@ const App = () => {
           <Blog
             key={b.id}
             blog={b}
-            updateBlog={updateBlog}
             deleteBlog={deleteBlog}
+            likeBlog={likeBlog}
             canDelete={b.user.username === user.username}
           />
         ))}
