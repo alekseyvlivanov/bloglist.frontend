@@ -100,6 +100,9 @@ const App = () => {
         text: `"${title}" by ${author} deleted`,
         type: 'success',
       });
+      setTimeout(() => {
+        setMessage({});
+      }, 3000);
     } catch (err) {
       setMessage({ text: err.message, type: 'error' });
       setTimeout(() => {

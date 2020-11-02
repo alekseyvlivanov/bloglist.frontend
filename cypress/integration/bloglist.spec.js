@@ -7,6 +7,12 @@ describe('Blog list', function () {
       password: 'sekret',
     };
     cy.request('POST', 'http://localhost:3003/api/users', user);
+    const user2 = {
+      name: 'test user2',
+      username: 'root2',
+      password: 'sekret2',
+    };
+    cy.request('POST', 'http://localhost:3003/api/users', user2);
     cy.visit('http://localhost:3000');
   });
 
@@ -48,17 +54,28 @@ describe('Blog list', function () {
       cy.login({ username: 'root', password: 'sekret' });
     });
 
-    it.only('a new blog can be created and liked', function () {
+    it.only('a new blog can be created, liked and deleted only by user who created it', function () {
       cy.contains('new blog').click();
       cy.get('.title').type('a blog created by cypress');
       cy.get('.author').type('cypress');
       cy.get('.url').type('http://localhost:3000');
       cy.contains('create').click();
       cy.contains('a blog created by cypress');
+
+      cy.login({ username: 'root2', password: 'sekret2' });
+      cy.contains('a blog created by cypress');
       cy.contains('view').click();
       cy.contains('likes 0');
       cy.contains('like').click();
       cy.contains('likes 1');
+      cy.get('html').should('not.contain', 'delete');
+
+      cy.login({ username: 'root', password: 'sekret' });
+      cy.contains('a blog created by cypress');
+      cy.contains('view').click();
+      cy.contains('delete').click();
+      cy.get('html').should('not.contain', 'delete');
+      cy.get('html').should('not.contain', 'view');
     });
 
     describe('and several blogs exist', function () {
