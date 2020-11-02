@@ -48,13 +48,17 @@ describe('Blog list', function () {
       cy.login({ username: 'root', password: 'sekret' });
     });
 
-    it('a new blog can be created', function () {
+    it.only('a new blog can be created and liked', function () {
       cy.contains('new blog').click();
       cy.get('.title').type('a blog created by cypress');
       cy.get('.author').type('cypress');
       cy.get('.url').type('http://localhost:3000');
       cy.contains('create').click();
       cy.contains('a blog created by cypress');
+      cy.contains('view').click();
+      cy.contains('likes 0');
+      cy.contains('like').click();
+      cy.contains('likes 1');
     });
 
     describe('and several blogs exist', function () {
