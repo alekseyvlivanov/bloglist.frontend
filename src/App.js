@@ -116,7 +116,6 @@ const App = () => {
   const blogForm = () => {
     return (
       <>
-        <h2>Blogs</h2>
         <p>
           {user.name} logged in
           <button onClick={handleLogout}>log out</button>
@@ -160,6 +159,7 @@ const App = () => {
   return (
     <div>
       <Notification message={message} />
+      <h2>Blogs</h2>
       {user ? blogForm() : loginForm()}
     </div>
   );
