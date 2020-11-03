@@ -54,7 +54,7 @@ describe('Blog list', function () {
       cy.login({ username: 'root', password: 'sekret' });
     });
 
-    it.only('a new blog can be created, liked and deleted only by user who created it', function () {
+    it('a new blog can be created, liked and deleted only by user who created it', function () {
       cy.contains('new blog').click();
       cy.get('.title').type('a blog created by cypress');
       cy.get('.author').type('cypress');
@@ -84,21 +84,34 @@ describe('Blog list', function () {
           title: 'first blog',
           author: 'cypress',
           url: 'http://localhost:3001',
+          likes: 2,
         });
         cy.createBlog({
           title: 'second blog',
           author: 'cypress',
           url: 'http://localhost:3002',
+          likes: 6,
         });
         cy.createBlog({
           title: 'third blog',
           author: 'cypress',
           url: 'http://localhost:3003',
+          likes: 4,
         });
       });
 
-      it('one of those can have some likes', function () {
-        //
+      it('with right order of likes', function () {
+        cy.get('.blog').then((blogs) => {
+          for (let blog of blogs) {
+            cy.wrap(blog).contains('view').click();
+          }
+        });
+
+        cy.get('.blog .likes').should((likes) => {
+          expect(likes[0]).to.contain.text('6');
+          expect(likes[1]).to.contain.text('4');
+          expect(likes[2]).to.contain.text('2');
+        });
       });
     });
   });

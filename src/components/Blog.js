@@ -37,7 +37,8 @@ const Blog = ({ blog, deleteBlog, likeBlog, canDelete }) => {
         <>
           <div>{url}</div>
           <div>
-            likes {likes} <button onClick={() => likeBlog(blog)}>like</button>
+            likes <span className="likes">{likes}</span>{' '}
+            <button onClick={() => likeBlog(blog)}>like</button>
           </div>
           <div>{name}</div>
           {canDelete && <button onClick={handleDelete}>delete</button>}
